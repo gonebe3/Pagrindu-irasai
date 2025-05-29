@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "../Darbui"
+		},
+		{
+			"name": "Pagrindai",
+			"path": "../Darbui/Justo failai/Pagrindai"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}
