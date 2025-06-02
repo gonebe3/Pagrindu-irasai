@@ -1,6 +1,6 @@
 import uuid
 
-class Knyga():
+class Knyga(): #Klases paskirtis = laikyti viso info apie viena atskira knyga ir automatiskas id priskirimas su uuid
     def __init__(self, pavadinimas, autorius, metai, zanras, turimas_kiekis, paimtas_kiekis):
         self.pavadinimas = pavadinimas
         self.autorius = autorius
