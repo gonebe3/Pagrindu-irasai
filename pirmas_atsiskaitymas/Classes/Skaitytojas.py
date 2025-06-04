@@ -36,9 +36,7 @@ class Skaitytojas(): #Saugo skaitytojo duomenis ir informacija apie paimtas knyg
         return self.paimtos_knygos
 
     def __str__(self):
-        return (f"Skaitytojas: {self.vardas}, {self.pavarde} "
-                f"korteles numeris: {self.korteles_numeris} "
-                f"Paimtu knygu kiekis: {len(self.paimtos_knygos)}")
+        return (f"Skaitytojas: {self.vardas}, {self.pavarde} | Korteles numeris: {self.korteles_numeris} | Paimtu knygu kiekis: {len(self.paimtos_knygos)} | Kontaktai {self.kontaktai}")
     
     def __repr__(self):
         return (f"Skaitytojas(vardas={self.vardas}), pavarde={self.pavarde}"

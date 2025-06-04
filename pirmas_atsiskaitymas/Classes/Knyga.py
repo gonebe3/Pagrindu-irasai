@@ -14,7 +14,8 @@ class Knyga(): #Klases paskirtis = laikyti viso info apie viena atskira knyga ir
         return self.turimas_kiekis - self.paimtas_kiekis
 
     def __str__(self):
-        return f"| Pavadinimas: {self.pavadinimas} | Autorius: {self.autorius} | Zanras: {self.zanras} | Isleidimo metai: {self.metai} | Knygu kiekis: {self.turimas_kiekis} | Paimtu knygu kiekis: {self.paimtas_kiekis} | Unikalus knygos ID: {self.unikalus_id} | Dabartinis likutis: {self.likutis()} | "
+        return (f"| Pavadinimas: {self.pavadinimas} | Autorius: {self.autorius} | Zanras: {self.zanras} | Isleidimo metai: {self.metai} | Knygu kiekis: {self.turimas_kiekis} | Paimtu knygu kiekis: {self.paimtas_kiekis} \n"
+                f"| Unikalus knygos ID: {self.unikalus_id} | Dabartinis likutis: {self.likutis()} | ")
 
     def __repr__(self):
         return f"Knyga('{self.pavadinimas}', '{self.autorius}', '{self.zanras}', {self.metai}, {self.turimas_kiekis}, {self.paimtas_kiekis}, {self.unikalus_id}, Likutis: {self.likutis()})"
