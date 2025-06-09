@@ -1,4 +1,4 @@
-from pirmas_atsiskaitymas.Classes.Knyga import Knyga
+from Classes.Knyga import Knyga
 
 # Prideti knyga i biblioteka  
 def prideti_knyga(knygu_sarasas, pavadinimas, autorius, metai, zanras, turimas_kiekis): #Sukuria nauja Knyga objekta ir prideda i knygu sarasa(paduodamas, kaip argumentas) ir grazina

@@ -1,4 +1,4 @@
-from pirmas_atsiskaitymas.Classes.Bibliotekininkas import Bibliotekininkas
+from Classes.Bibliotekininkas import Bibliotekininkas
 
 def registruoti_bibliotekininka(bibliotekininku_sarasas, vardas, pavarde, vartotojo_vardas, slaptazodis):
     naujas = Bibliotekininkas(vardas, pavarde, vartotojo_vardas, slaptazodis)

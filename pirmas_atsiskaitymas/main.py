@@ -3,11 +3,11 @@
 # Naudotojo prisijungimas: c70f6cd0-28c5-4114-9739-946251a71ca1
 
 
-from pirmas_atsiskaitymas.Servises.Knygu_servisas import *
-from pirmas_atsiskaitymas.Servises.Skaitytoju_servisas import *
-from pirmas_atsiskaitymas.Servises.Bibliotekininko_servisas import *
-from pirmas_atsiskaitymas.Servises.failu_valdymo_servisas import ikelti_duomenis, issaugoti_duomenis
-from pirmas_atsiskaitymas.Classes.Knyga import Knyga
+from Servises.Knygu_servisas import *
+from Servises.Skaitytoju_servisas import *
+from Servises.Bibliotekininko_servisas import *
+from Servises.failu_valdymo_servisas import ikelti_duomenis, issaugoti_duomenis
+from Classes.Knyga import Knyga
 
 # Colorama spalvos: pravers grazesniam meniu atvaizdavimui
 try:

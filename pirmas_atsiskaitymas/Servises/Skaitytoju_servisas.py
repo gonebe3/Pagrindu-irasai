@@ -1,5 +1,5 @@
-from pirmas_atsiskaitymas.Classes.Skaitytojas import Skaitytojas
-from pirmas_atsiskaitymas.Classes.Knyga import Knyga
+from Classes.Skaitytojas import Skaitytojas
+from Classes.Knyga import Knyga
 
 def registruoti_skaitytoja(skaitytoju_sarasas, vardas, pavarde, kontaktai): #sukuria nauja objekta Skaitytojas, prideda ji i skaitytoju sarasa(kaip objekta) ir grazina
     naujas_skaitytojas = Skaitytojas(
