@@ -46,10 +46,43 @@ def ieskoti_pagal_zanra(knygu_sarasas, zanras):
 def gauti_visas_knygas(knygu_sarasas):
     return knygu_sarasas
 
+from collections import Counter
+from datetime import datetime
+
 def populiariausi_zanrai(knygu_sarasas): #grazina zanru skaiciavima, kiekvieno zanro kieki atskirai (Suskaiciuoja su Counter)
-    from collections import Counter
     visi_zanrai = [k.zanras for k in knygu_sarasas]
     return Counter(visi_zanrai)
+
+def populiariausi_zanrai_pagal_paeimus(skaitytojai, knygos):
+    # Skaiciuoja populiariausius zanrus pagal visu skaitytoju paimtu knygu sarasus
+    zanrai = []
+    for skaitytojas in skaitytojai:
+        for kn in skaitytojas.paimtos_knygos:
+            for k in knygos:
+                if k.unikalus_id == kn["Knygos_ID"]:
+                    zanrai.append(k.zanras)
+                    break
+    return Counter(zanrai)
+
+def gauti_visas_veluojancias_knygas(skaitytojai, knygos): #paduosime visu skaitytoju sarasa ir visu knygu sarasa
+    # Surenka visas veluojancias knygas is visu skaitytoju
+    veluojancios = []
+    for skaitytojas in skaitytojai:
+        for kn in skaitytojas.veluojancios_knygos():
+            pavadinimas = "Nerasta"
+            for k in knygos:  
+                if k.unikalus_id == kn["Knygos_ID"]: # palyginame ar veluojancios knygos sutampa pagal Id su visomis bibliotekos knygomis
+                    pavadinimas = k.pavadinimas
+                    break
+            veluoja_dienu = (datetime.now() - kn["Grazinti_iki"]).days
+            veluojancios.append({
+                "skaitytojas": f"{skaitytojas.vardas} {skaitytojas.pavarde}",
+                "pavadinimas": pavadinimas,
+                "grazinti_iki": kn["Grazinti_iki"].strftime('%Y-%m-%d'),
+                "veluoja_dienu": veluoja_dienu
+            })
+    return veluojancios
+
 
 def knygu_balansas(knygu_sarasas):
     balansas = []

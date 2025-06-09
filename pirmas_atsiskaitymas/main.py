@@ -1,4 +1,4 @@
-# Pagrindinis meniu failas: main.py #python -m pirmas_atsiskaitymas.main
+# Pagrindinis meniu failas: main.py #python -m pirmas_atsiskaitymas.main #c70f6cd0-28c5-4114-9739-946251a71ca1
 # Importuojame servisus ir klases is tavo projekto struktūros
 from pirmas_atsiskaitymas.Servises.Knygu_servisas import *
 from pirmas_atsiskaitymas.Servises.Skaitytoju_servisas import *
@@ -32,6 +32,19 @@ def spalva(tekstas, spalva="yellow"):
 def bruksnys():
     """Meniu atskyrimui, kad viskas butu aiskiu blokais"""
     print(spalva("-"*60, "cyan"))
+
+def vartotojo_knygu_atvaizdavimas(info, numeris=None): 
+    """
+    graziai atvaizduoja vienos paimtos knygos irasa vartotojui
+    """
+    eil = []
+    if numeris is not None:
+        eil.append(f"{numeris}.")
+    eil.append(f"Knygos ID: {info['Knygos_ID']}")
+    eil.append(f"Paemimo data: {info['Paemimo_data'].strftime('%Y-%m-%d')}")
+    eil.append(f"Grazinti iki: {info['Grazinti_iki'].strftime('%Y-%m-%d')}")
+    eil.append(f"Ar grazinta : {'Taip' if info['Ar_grazinta'] else 'Ne'}")
+    return "\n".join(eil)
 
 # Ikeliami duomenys is failu arba gaunami tusci sarasai jei failo nera
 knygos = ikelti_duomenis("knygos.pickle")
@@ -89,7 +102,7 @@ def registruoti_skaitytoja_view():
             print(spalva("Visi laukai privalomi. Bandykite dar karta.", "red"))
 
 def registruoti_bibliotekininka_view():
-    """Leidzia uzregistruoti nauja bibliotekininka is pagrindinio meniu"""
+    """Leidzia uzregistruoti nauja bibliotekininka"""
     bruksnys()
     print(spalva("-- Naujo bibliotekininko registracija --", "cyan"))
     while True:
@@ -132,8 +145,19 @@ def skaitytojo_meniu():
         if pasirinkimas == "1":
             bruksnys()
             print(spalva("-- Jusu paimtos knygos --", "cyan"))
-            for knyga in skaitytojas.visos_imtos_knygos():
-                print(knyga)
+            for i, k in enumerate(skaitytojas.visos_imtos_knygos(), 1):
+                pavadinimas = "Nerastas"
+                for kn in knygos:
+                    if kn.unikalus_id == k["Knygos_ID"]:
+                        pavadinimas = kn.pavadinimas
+                        break
+
+                print(f"{i}. Pavadinimas    : {pavadinimas}")
+                print(f"   Knygos ID     : {k['Knygos_ID']}")
+                print(f"   Paemimo data  : {k['Paemimo_data'].strftime('%Y-%m-%d')}")
+                print(f"   Grazinti iki  : {k['Grazinti_iki'].strftime('%Y-%m-%d')}")
+                print(f"   Ar grazinta   : {'Taip' if k['Ar_grazinta'] else 'Ne'}")
+                print(spalva("-"*50, "cyan"))
             bruksnys()
         elif pasirinkimas == "2":
             pavadinimas = input("Iveskite knygos pavadinima (arba jo dali, 'q' - grizti): ")
@@ -228,7 +252,9 @@ def bibliotekininko_meniu():
         print("5. Perziureti visus skaitytojus")
         print("6. Registruoti nauja skaitytoja")
         print("7. Statistika")
-        print("8. Atgal")
+        print("8. Perziureti visas veluojancias knygas")
+        print("9. Populiariausi zanrai pagal paemimus")
+        print("10. Atgal")
         bruksnys()
         pasirinkimas = input(spalva("Pasirinkite veiksma: ", "yellow"))
         if pasirinkimas == "1":
@@ -260,12 +286,14 @@ def bibliotekininko_meniu():
                 print(spalva("Blogas ivesties formatas.", "red"))
         elif pasirinkimas == "4":
             print(spalva("-- Visos bibliotekos knygos --", "cyan"))
+            bruksnys()
             for kn in knygos:
                 print(kn)
                 print(spalva("-"*200, "yellow"))
             bruksnys()
         elif pasirinkimas == "5":
             print(spalva("-- Visi skaitytojai --", "cyan"))
+            bruksnys()
             for s in skaitytojai:
                 print(s)
                 print(spalva("-"*200, "yellow"))
@@ -280,6 +308,25 @@ def bibliotekininko_meniu():
             print(spalva(f"Vidutinis veluojanciu knygu kiekis skaitytojui: {vidurkis}", "yellow"))
             bruksnys()
         elif pasirinkimas == "8":
+            bruksnys()
+            print(spalva("-- Visos veluojancios knygos --", "red"))
+            veluojancios = gauti_visas_veluojancias_knygas(skaitytojai, knygos)
+            if not veluojancios:
+                print(spalva("Velyuojanciu knygu nera.", "green"))
+            else:
+                for info in veluojancios:
+                    print(f"Skaitytojas: {info['skaitytojas']}")
+                    print(f"Pavadinimas: {info['pavadinimas']}")
+                    print(f"Grazinti iki: {info['grazinti_iki']}")
+                    print(f"Veluoja: {info['veluoja_dienu']} d.")
+                    print(spalva("-"*50, "cyan"))
+            bruksnys()
+        elif pasirinkimas == "9":
+            print("Populiariausi zanrai pagal paemimus:")
+            for zanras, kiekis in populiariausi_zanrai_pagal_paeimus(skaitytojai, knygos).most_common():
+                print(f"{zanras}: {kiekis}")
+            bruksnys()
+        elif pasirinkimas == "10":
             bruksnys()
             return
         else:
