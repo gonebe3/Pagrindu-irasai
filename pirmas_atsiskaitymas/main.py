@@ -1,5 +1,8 @@
-# Pagrindinis meniu failas: main.py #python -m pirmas_atsiskaitymas.main #c70f6cd0-28c5-4114-9739-946251a71ca1
-# Importuojame servisus ir klases is tavo projekto struktūros
+# Pagrindinis meniu failas: main.py 
+# Programa pasileidzia ivedus: python -m pirmas_atsiskaitymas.main 
+# Naudotojo prisijungimas: c70f6cd0-28c5-4114-9739-946251a71ca1
+
+
 from pirmas_atsiskaitymas.Servises.Knygu_servisas import *
 from pirmas_atsiskaitymas.Servises.Skaitytoju_servisas import *
 from pirmas_atsiskaitymas.Servises.Bibliotekininko_servisas import *
@@ -139,7 +142,8 @@ def skaitytojo_meniu():
         print("2. Paimti nauja knyga")
         print("3. Grazinti knyga")
         print("4. Velyuojancios knygos")
-        print("5. Atgal")
+        print("5. Visos bibliotekos knygos")
+        print("6. Atgal")
         bruksnys()
         pasirinkimas = input(spalva("Pasirinkite veiksma: ", "yellow"))
         if pasirinkimas == "1":
@@ -151,7 +155,6 @@ def skaitytojo_meniu():
                     if kn.unikalus_id == k["Knygos_ID"]:
                         pavadinimas = kn.pavadinimas
                         break
-
                 print(f"{i}. Pavadinimas    : {pavadinimas}")
                 print(f"   Knygos ID     : {k['Knygos_ID']}")
                 print(f"   Paemimo data  : {k['Paemimo_data'].strftime('%Y-%m-%d')}")
@@ -159,6 +162,7 @@ def skaitytojo_meniu():
                 print(f"   Ar grazinta   : {'Taip' if k['Ar_grazinta'] else 'Ne'}")
                 print(spalva("-"*50, "cyan"))
             bruksnys()
+
         elif pasirinkimas == "2":
             pavadinimas = input("Iveskite knygos pavadinima (arba jo dali, 'q' - grizti): ")
             if pavadinimas.lower() == "q":
@@ -191,21 +195,51 @@ def skaitytojo_meniu():
                     except (ValueError, IndexError):
                         print(spalva("Blogas pasirinkimas. Bandykite dar karta.", "red"))
         elif pasirinkimas == "3":
-            negr = [k for k in skaitytojas.visos_imtos_knygos() if not k["Ar_grazinta"]]
-            if not negr:
+            negrazinta = [k for k in skaitytojas.visos_imtos_knygos() if not k["Ar_grazinta"]]
+            if not negrazinta:
                 print(spalva("Neturite negrazintu knygu.", "yellow"))
             else:
-                for idx, k in enumerate(negr):
-                    print(f"{idx+1}. {k}")
+                for idx, k in enumerate(negrazinta, 1):
+                    pavadinimas = "Nerasta"
+                    for kn in knygos:
+                        if kn.unikalus_id == k["Knygos_ID"]:
+                            pavadinimas = kn.pavadinimas
+                            break
+                    print(f"{idx}. Pavadinimas    : {pavadinimas}")
+                    print(f"   Knygos ID     : {k['Knygos_ID']}")
+                    print(f"   Paėmimo data  : {k['Paemimo_data'].strftime('%Y-%m-%d')}")
+                    print(f"   Grąžinti iki  : {k['Grazinti_iki'].strftime('%Y-%m-%d')}")
+                    print(f"   Ar grąžinta   : {'Taip' if k['Ar_grazinta'] else 'Ne'}")
+                    print(spalva("-"*50, "cyan"))
+
                 while True:
                     try:
                         nr = input("Kuria knyga grazinti (numeris, 'q' - grizti): ")
                         if nr.lower() == "q":
                             break
                         nr = int(nr) - 1
-                        if nr < 0 or nr >= len(negr):
+                        if nr < 0 or nr >= len(negrazinta):
                             raise IndexError
-                        knygos_id = negr[nr]["Knygos_ID"]
+                        knygos_id = negrazinta[nr]["Knygos_ID"]
+                        kn_obj = next((kn for kn in knygos if kn.unikalus_id == knygos_id), None)
+                        if kn_obj and grazinti_knyga_skaitytojui(skaitytojas, kn_obj):
+                            print(spalva("Knyga grazinta sekmingai!", "green"))
+                            issaugoti_viska()
+                        else:
+                            print(spalva("Grazinimas nepavyko.", "red"))
+                        break
+                    except (ValueError, IndexError):
+                        print(spalva("Blogas pasirinkimas. Bandykite dar karta.", "red"))
+
+                while True:
+                    try:
+                        nr = input("Kuria knyga grazinti (numeris, 'q' - grizti): ")
+                        if nr.lower() == "q":
+                            break
+                        nr = int(nr) - 1
+                        if nr < 0 or nr >= len(negrazinta):
+                            raise IndexError
+                        knygos_id = negrazinta[nr]["Knygos_ID"]
                         kn_obj = next((kn for kn in knygos if kn.unikalus_id == knygos_id), None)
                         if kn_obj and grazinti_knyga_skaitytojui(skaitytojas, kn_obj):
                             print(spalva("Knyga grazinta sekmingai!", "green"))
@@ -218,13 +252,33 @@ def skaitytojo_meniu():
         elif pasirinkimas == "4":
             veluojancios = skaitytojas.veluojancios_knygos()
             if not veluojancios:
-                print(spalva("Velyuojanciu knygu nera.", "green"))
+                print(spalva("Vėluojančių knygų nėra.", "green"))
             else:
-                print(spalva("Velyuojancios knygos:", "red"))
-                for kn in veluojancios:
-                    print(kn)
+                print(spalva("Vėluojančios knygos:", "red"))
+                for idx, k in enumerate(veluojancios, 1):
+                    pavadinimas = "Nerasta"
+                    for kn in knygos:
+                        if kn.unikalus_id == k["Knygos_ID"]:
+                            pavadinimas = kn.pavadinimas
+                            break
+                    print(f"{idx}. Pavadinimas    : {pavadinimas}")
+                    print(f"   Knygos ID     : {k['Knygos_ID']}")
+                    print(f"   Paėmimo data  : {k['Paemimo_data'].strftime('%Y-%m-%d')}")
+                    print(f"   Grąžinti iki  : {k['Grazinti_iki'].strftime('%Y-%m-%d')}")
+                    print(f"   Ar grąžinta   : {'Taip' if k['Ar_grazinta'] else 'Ne'}")
+                    print(spalva("-"*50, "cyan"))
             bruksnys()
         elif pasirinkimas == "5":
+            bruksnys()
+            print(spalva("-- Visos bibliotekos knygos --", "cyan"))
+            if not knygos:
+                print(spalva("Bibliotekoje nėra nė vienos knygos.", "yellow"))
+            else:
+                for i, kn in enumerate(knygos, 1):
+                    print(f"{i}. {kn}")
+                    print(spalva("-"*50, "cyan"))
+            bruksnys()
+        elif pasirinkimas == "6":
             bruksnys()
             return
         else:
