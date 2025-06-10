@@ -1,5 +1,4 @@
 # Pagrindinis meniu failas: main.py 
-# Programa pasileidzia ivedus: python -m pirmas_atsiskaitymas.main 
 # Naudotojo prisijungimas: c70f6cd0-28c5-4114-9739-946251a71ca1
 
 
