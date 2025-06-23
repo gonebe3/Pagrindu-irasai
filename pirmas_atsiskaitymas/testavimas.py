@@ -23,3 +23,16 @@ if skaitytojai and knygos:
 
 else:
     print("Trūksta bent vieno skaitytojo ar knygos duomenų!")
+
+
+    Bibliotekininko meniu (Antaniux Antaniux)
+1. Prideti nauja knyga
+2. Pasalinti knyga pagal ID
+3. Pasalinti senas knygas pagal metus
+4. Perziureti visas knygas
+5. Perziureti visus skaitytojus
+6. Registruoti nauja skaitytoja
+7. Statistika
+8. Perziureti visas veluojancias knygas
+9. Populiariausi zanrai pagal paemimus
+10. Atgal
